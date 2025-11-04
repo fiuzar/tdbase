@@ -113,7 +113,7 @@ export async function CloseTradeLog(tradeId, closePrice, closeNotes) {
                 SET close_price = $1,
                     close_notes = $2,
                     closed_at = NOW()
-                WHERE trade_id = $3 AND user_id = $4
+                WHERE id = $3 AND user_id = $4
                 RETURNING *
             `,
             [closePrice, closeNotes, tradeId, userId]

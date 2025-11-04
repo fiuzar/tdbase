@@ -20,6 +20,15 @@ export default function TradeLogPage() {
     const [sortValue, setSortValue] = useState({ sortBy: "date", order: 0 })
     const [tradeLogs, setTradelogs] = useState([])
     const [insertedTrade, setInsertedTrade] = useState(null)
+    const [updatedTrade, setUpdatedTrade] = useState(null)
+
+    useEffect(() => {
+        if (updatedTrade) {
+            setTradelogs((prevLogs) => {
+                return prevLogs.map((log) => log.id === updatedTrade.id ? updatedTrade : log);
+            })
+        }
+    }, [updatedTrade])
 
     function handleSortChange(value) {
         if (value === sortValue.sortBy) {
@@ -96,7 +105,7 @@ export default function TradeLogPage() {
                         </div>
                     </div>
 
-                    <TradeLogsTable logs={tradeLogs} />
+                    <TradeLogsTable logs={tradeLogs} setUpdatedTrade={setUpdatedTrade} />
                 </div>
             </div>
         </div>

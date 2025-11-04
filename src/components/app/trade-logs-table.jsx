@@ -6,9 +6,9 @@ import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, Tabl
 import { Card } from "../ui/card";
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { X } from "lucide-react";
+import { CheckCheck } from "lucide-react";
 
-export function TradeLogsTable({ logs }) {
+export function TradeLogsTable({ logs, setUpdatedTrade }) {
     return (
         <Card className="p-4">
             <Table>
@@ -26,21 +26,45 @@ export function TradeLogsTable({ logs }) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {logs.map((tradelog, idx) => (
-                        <TableRow key={idx}>
-                            <TableCell>{new Date(tradelog.created_at).toLocaleDateString()}</TableCell>
-                            <TableCell>{tradelog.symbol}</TableCell>
-                            <TableCell>{tradelog.direction}</TableCell>
-                            <TableCell>{tradelog.entry_price}</TableCell>
-                            <TableCell>{tradelog.stop_loss}</TableCell>
-                            <TableCell>{tradelog.take_profit}</TableCell>
-                            <TableCell>{tradelog.lot_size}</TableCell>
-                            <TableCell>{tradelog.risk_reward_ratio}</TableCell>
-                            <TableCell>
-                                <CloseTrade tradeDetail={JSON.stringify(tradelog)} />
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                    {logs.map((tradelog, idx) => {
+
+                        const getRowBackground = (tradelog) => {
+                            if (!tradelog.close_price) return "";
+                            if (tradelog.close_price === tradelog.entry_price) return "";
+
+                            if (tradelog.direction === "BUY") {
+                                return tradelog.close_price > tradelog.entry_price
+                                    ? "bg-green-800/30"
+                                    : "bg-red-800/30";
+                            } else {
+                                return tradelog.close_price < tradelog.entry_price
+                                    ? "bg-green-800/30"
+                                    : "bg-red-800/30";
+                            }
+                        };
+
+                        return (
+                            <TableRow key={idx} className={getRowBackground(tradelog)}>
+                                <TableCell>{new Date(tradelog.created_at).toLocaleDateString()}</TableCell>
+                                <TableCell>{tradelog.symbol}</TableCell>
+                                <TableCell>{tradelog.direction}</TableCell>
+                                <TableCell>{tradelog.entry_price}</TableCell>
+                                <TableCell>{tradelog.stop_loss}</TableCell>
+                                <TableCell>{tradelog.take_profit}</TableCell>
+                                <TableCell>{tradelog.lot_size}</TableCell>
+                                <TableCell>{tradelog.risk_reward_ratio}</TableCell>
+                                <TableCell>
+                                    {tradelog.close_price ? (
+                                        <Button size={"icon"} disabled={true} className="text-white text-lg hover:text-black cursor-pointer" variant={'ghost'}>
+                                            <CheckCheck />
+                                        </Button>
+                                    ) : (
+                                        <CloseTrade tradeDetail={JSON.stringify(tradelog)} setUpdateLogs={setUpdatedTrade} />
+                                    )}
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })}
                     {/* <TableRow className="bg-red-800/30">
                         <TableCell>12/10/2025</TableCell>
                         <TableCell>EURUSD</TableCell>
