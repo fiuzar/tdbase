@@ -14,7 +14,9 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input"
 
 import { Logs, Plus, X } from "lucide-react"
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useContext } from "react";
+import { TradeAccountContext } from "@/server-actions/userContext";
 import { toast } from "sonner";
 
 import { add_trade_account } from "@/server-actions/create-trade-account-actions";
@@ -28,6 +30,8 @@ export default function CreateTradeAccount() {
     const [rules, setRules] = useState({ max_risk_per_trade: "", max_daily_loss: "", max_total_loss: "", profit_target: "" })
     const [strategy, setStrategy] = useState([])
     const [strategySingle, setStrategySingle] = useState("")
+
+    const { setTradeAccounts } = useContext(TradeAccountContext)
 
     const [isDisabled, setIsDisabled] = useState(true)
 
@@ -66,10 +70,11 @@ export default function CreateTradeAccount() {
     }
 
     async function create_account() {
-        const { success, message } = await add_trade_account(accountName, startingBalance, leverage, currency, rules, strategy)
+        const { success, message, data } = await add_trade_account(accountName, startingBalance, leverage, currency, rules, strategy)
 
         if (success) {
             toast(<div className="text-green-700">{message}</div>)
+            setTradeAccounts(data)
         }
         else {
             toast(<div className="text-red-700">{message}</div>)

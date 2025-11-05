@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation"
 export default function AppLayout({ children }) {
     const router = useRouter()
     const [user, setUser] = useState({})
-    const [accounts, setAccounts] = useState([])
+    const [accounts, setAccounts] = useState({})
 
     useEffect(() => {
         async function runPreliminaries() {

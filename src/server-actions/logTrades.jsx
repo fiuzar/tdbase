@@ -86,6 +86,8 @@ export async function getUserTradeLogs(filters) {
         let queryParams = [userId];
         const result = await query(baseQuery, queryParams);
 
+        console.log(result.rows)
+
         return { success: true, tradeLogs: result.rows };
     }
     catch (error) {
