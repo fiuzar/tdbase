@@ -150,7 +150,6 @@ export default function MiniPerformanceCharts() {
 
   return (
     <Card className="p-2 mt-4">
-      <h2 className="text-lg font-semibold mb-2">Mini Performance Chart</h2>
       <div style={{ height: "300px" }}>
         {equityCurve.length > 0 ? (
           <Line data={chartData} options={chartOptions} />
